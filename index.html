@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manager SKI Bandung - Digital Employee Showcase</title>
+    <style>
+        :root {
+            --bg-color: #0a0a0a;
+            --surface-color: #171717;
+            --surface-hover: #262626;
+            --text-primary: #f5f5f5;
+            --text-secondary: #a3a3a3;
+            --accent-color: #3b82f6; /* Professional Blue */
+            --accent-hover: #2563eb;
+            --success-color: #10b981;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 4rem 1rem;
+            border-bottom: 1px solid #333;
+        }
+        .avatar {
+            font-size: 4rem;
+            background: var(--surface-color);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            border: 2px solid #333;
+        }
+        .status-badge {
+            display: inline-block;
+            background-color: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1.125rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* PROBLEM & SOLUTION */
+        .section-title {
+            text-align: center;
+            font-size: 1.8rem;
+            margin: 4rem 0 2rem;
+            font-weight: 600;
+        }
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+        .card {
+            background-color: var(--surface-color);
+            padding: 2rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+        }
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #333;
+        }
+        .chaos h3 { color: #ef4444; }
+        .solution h3 { color: var(--success-color); }
+        .card ul {
+            list-style: none;
+        }
+        .card ul li {
+            margin-bottom: 1rem;
+            padding-left: 1.5rem;
+            position: relative;
+            color: var(--text-secondary);
+        }
+        .chaos ul li::before { content: "✕"; position: absolute; left: 0; color: #ef4444; }
+        .solution ul li::before { content: "✓"; position: absolute; left: 0; color: var(--success-color); }
+
+        /* CAPABILITIES */
+        .capabilities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+        .tool-card {
+            background-color: var(--surface-color);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #333;
+            text-align: center;
+            transition: transform 0.2s ease;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-color);
+        }
+        .tool-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        .tool-card h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+        .tool-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* INTERACTIVE SIMULATION */
+        .simulation-container {
+            background-color: var(--surface-color);
+            border: 1px solid #333;
+            border-radius: 12px;
+            overflow: hidden;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .sim-header {
+            background-color: #111;
+            padding: 1rem;
+            border-bottom: 1px solid #333;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-box {
+            height: 300px;
+            overflow-y: auto;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .message {
+            max-width: 80%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+        .msg-user {
+            background-color: var(--accent-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 2px;
+        }
+        .msg-agent {
+            background-color: #333;
+            color: var(--text-primary);
+            align-self: flex-start;
+            border-bottom-left-radius: 2px;
+        }
+        .typing-indicator {
+            display: none;
+            align-self: flex-start;
+            background-color: #333;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+        .scenarios {
+            padding: 1rem;
+            background-color: #111;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .btn-scenario {
+            background-color: var(--surface-hover);
+            color: var(--text-primary);
+            border: 1px solid #444;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+        .btn-scenario:hover {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+        }
+
+        /* CTA & FOOTER */
+        .cta-section {
+            text-align: center;
+            padding: 5rem 0;
+        }
+        .btn-primary {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            border-top: 1px solid #333;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid, .capabilities-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 1. HERO SECTION -->
+    <section class="hero">
+        <div class="avatar">👨‍💼</div>
+        <div class="status-badge">🟢 Status: Active & Ready 24/7</div>
+        <h1>Manager SKI Bandung</h1>
+        <p>Mengatur strategi marketing dan sales penjualan solar panel di Indonesia, fokus pada Bandung Area.</p>
+    </section>
+
+    <!-- 2. PROBLEM & SOLUTION CARD -->
+    <h2 class="section-title">Why You Need This Agent</h2>
+    <section class="comparison-grid">
+        <div class="card chaos">
+            <h3>The Chaos</h3>
+            <ul>
+                <li>Tim sales bingung hari ini harus follow-up ke klien yang mana.</li>
+                <li>Tidak ada strategi jelas tentang cara mencari prospek klien baru.</li>
+                <li>Eksekusi digital marketing & canvassing berjalan tanpa arah yang jelas.</li>
+            </ul>
+        </div>
+        <div class="card solution">
+            <h3>The Solution</h3>
+            <ul>
+                <li>Memberikan briefing otomatis tiap Senin untuk menentukan target sales.</li>
+                <li>Menyediakan rute canvassing harian yang terstruktur dan spesifik.</li>
+                <li>Menyusun tema kampanye digital marketing yang terarah dan tepat sasaran.</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- 3. CORE CAPABILITIES -->
+    <h2 class="section-title">Core Capabilities & Integrations</h2>
+    <section class="capabilities-grid">
+        <div class="tool-card">
+            <div class="tool-icon">📝</div>
+            <h4>Google Docs</h4>
+            <p>Membuat, menyusun, dan mengelola list klien atau prospek secara terpusat agar mudah dipantau.</p>
+        </div>
+        <div class="tool-card">
+            <div class="tool-icon">📅</div>
+            <h4>Google Calendar</h4>
+            <p>Mengatur jadwal pertemuan dan menjadi pengingat otomatis untuk follow-up klien penting.</p>
+        </div>
+        <div class="tool-card">
+            <div class="tool-icon">✅</div>
+            <h4>Google Tasks</h4>
+            <p>Membuat dan mendistribusikan jadwal tugas harian secara spesifik untuk tim sales & marketing.</p>
+        </div>
+    </section>
+
+    <!-- 4. INTERACTIVE SIMULATION -->
+    <h2 class="section-title">Interactive Simulation</h2>
+    <section class="simulation-container">
+        <div class="sim-header">
+            <span>Live Chat: Manager SKI Bandung</span>
+        </div>
+        <div class="chat-box" id="chat-box">
+            <div class="message msg-agent">Halo tim! Saya siap membantu mengatur strategi penjualan dan pemasaran panel surya kita hari ini. Apa yang ingin Anda jadwalkan?</div>
+            <div class="typing-indicator" id="typing-indicator">Manager SKI is typing...</div>
+        </div>
+        <div class="scenarios">
+            <button class="btn-scenario" onclick="runScenario(0)">"Apa agenda briefing Senin ini?"</button>
+            <button class="btn-scenario" onclick="runScenario(1)">"Siapa yang harus difollow-up hari ini?"</button>
+            <button class="btn-scenario" onclick="runScenario(2)">"Buatkan rencana canvassing & digital marketing."</button>
+        </div>
+    </section>
+
+    <!-- 5. FOOTER & CTA -->
+    <section class="cta-section">
+        <a href="https://wa.me/628118800800" target="_blank" class="btn-primary">Hubungi Admin SKI Bandung</a>
+    </section>
+</div>
+
+<footer>
+    Built with AI · AI Builder Bootcamp Showcase
+</footer>
+
+<script>
+    const scenarios = [
+        {
+            user: "Tolong berikan agenda briefing Senin untuk minggu ini.",
+            agent: "Tentu. Minggu ini kita fokus pada industri manufaktur di Bandung Selatan. Saya sudah menyiapkan list 15 prospek klien di Google Docs dan membagikan jadwal follow-up awal ke Google Calendar Anda."
+        },
+        {
+            user: "Siapa saja klien yang harus saya follow-up hari ini?",
+            agent: "Hari ini Anda memiliki 3 jadwal follow-up prioritas. Detail kontak, nomor telepon, dan riwayat obrolan terakhir sudah saya masukkan ke Google Tasks harian Anda. Silakan cek."
+        },
+        {
+            user: "Apa langkah canvassing dan digital marketing kita hari ini?",
+            agent: "Untuk canvassing, tim akan menyisir area industri Cimahi (rute terlampir). Untuk digital marketing, hari ini kita mempublikasikan konten bertema 'Efisiensi Biaya Listrik Pabrik 30% dengan Solar Panel'. Semua jadwal sudah sinkron!"
+        }
+    ];
+
+    function runScenario(index) {
+        const chatBox = document.getElementById('chat-box');
+        const typing = document.getElementById('typing-indicator');
+        
+        // Add User Message
+        const userMsg = document.createElement('div');
+        userMsg.className = 'message msg-user';
+        userMsg.textContent = scenarios[index].user;
+        chatBox.insertBefore(userMsg, typing);
+        
+        // Show Typing
+        typing.style.display = 'block';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Simulate Delay and Agent Response
+        setTimeout(() => {
+            typing.style.display = 'none';
+            const agentMsg = document.createElement('div');
+            agentMsg.className = 'message msg-agent';
+            agentMsg.textContent = scenarios[index].agent;
+            chatBox.insertBefore(agentMsg, typing);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }, 1500);
+    }
+</script>
+
+</body>
+</html>
