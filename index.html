@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manager SKI Bandung - Digital Employee Showcase</title>
+    <!-- Tambahkan library Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --bg-color: #0a0a0a;
@@ -11,7 +13,7 @@
             --surface-hover: #262626;
             --text-primary: #f5f5f5;
             --text-secondary: #a3a3a3;
-            --accent-color: #3b82f6; /* Professional Blue */
+            --accent-color: #3b82f6;
             --accent-hover: #2563eb;
             --success-color: #10b981;
         }
@@ -227,6 +229,50 @@
             border-color: var(--accent-color);
         }
 
+        /* SUPABASE DATA SECTION */
+        .data-container {
+            background-color: var(--surface-color);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+        .data-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+        .data-item {
+            background-color: #111;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--accent-color);
+        }
+        .data-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+        .data-item-address {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+        .data-item-score {
+            display: inline-block;
+            background-color: #333;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            color: #fbbf24; /* Warna kuning bintang */
+        }
+        .loading {
+            text-align: center;
+            color: var(--text-secondary);
+            padding: 2rem;
+        }
+
         /* CTA & FOOTER */
         .cta-section {
             text-align: center;
@@ -262,7 +308,6 @@
 <body>
 
 <div class="container">
-    <!-- 1. HERO SECTION -->
     <section class="hero">
         <div class="avatar">👨‍💼</div>
         <div class="status-badge">🟢 Status: Active & Ready 24/7</div>
@@ -270,7 +315,6 @@
         <p>Mengatur strategi marketing dan sales penjualan solar panel di Indonesia, fokus pada Bandung Area.</p>
     </section>
 
-    <!-- 2. PROBLEM & SOLUTION CARD -->
     <h2 class="section-title">Why You Need This Agent</h2>
     <section class="comparison-grid">
         <div class="card chaos">
@@ -291,7 +335,6 @@
         </div>
     </section>
 
-    <!-- 3. CORE CAPABILITIES -->
     <h2 class="section-title">Core Capabilities & Integrations</h2>
     <section class="capabilities-grid">
         <div class="tool-card">
@@ -311,7 +354,6 @@
         </div>
     </section>
 
-    <!-- 4. INTERACTIVE SIMULATION -->
     <h2 class="section-title">Interactive Simulation</h2>
     <section class="simulation-container">
         <div class="sim-header">
@@ -328,7 +370,13 @@
         </div>
     </section>
 
-    <!-- 5. FOOTER & CTA -->
+    <h2 class="section-title">Scraped Client Leads (Live from Supabase)</h2>
+    <section class="data-container">
+        <p style="color: var(--text-secondary); text-align: center;">Data prospek terbaru hasil scraping Google Maps area Bandung</p>
+        <div id="places-loading" class="loading">Memuat data dari database...</div>
+        <ul class="data-list" id="places-list"></ul>
+    </section>
+
     <section class="cta-section">
         <a href="https://wa.me/628118800800" target="_blank" class="btn-primary">Hubungi Admin SKI Bandung</a>
     </section>
@@ -340,35 +388,23 @@
 
 <script>
     const scenarios = [
-        {
-            user: "Tolong berikan agenda briefing Senin untuk minggu ini.",
-            agent: "Tentu. Minggu ini kita fokus pada industri manufaktur di Bandung Selatan. Saya sudah menyiapkan list 15 prospek klien di Google Docs dan membagikan jadwal follow-up awal ke Google Calendar Anda."
-        },
-        {
-            user: "Siapa saja klien yang harus saya follow-up hari ini?",
-            agent: "Hari ini Anda memiliki 3 jadwal follow-up prioritas. Detail kontak, nomor telepon, dan riwayat obrolan terakhir sudah saya masukkan ke Google Tasks harian Anda. Silakan cek."
-        },
-        {
-            user: "Apa langkah canvassing dan digital marketing kita hari ini?",
-            agent: "Untuk canvassing, tim akan menyisir area industri Cimahi (rute terlampir). Untuk digital marketing, hari ini kita mempublikasikan konten bertema 'Efisiensi Biaya Listrik Pabrik 30% dengan Solar Panel'. Semua jadwal sudah sinkron!"
-        }
+        { user: "Tolong berikan agenda briefing Senin untuk minggu ini.", agent: "Tentu. Minggu ini kita fokus pada industri manufaktur di Bandung Selatan. Saya sudah menyiapkan list 15 prospek klien di Google Docs dan membagikan jadwal follow-up awal ke Google Calendar Anda." },
+        { user: "Siapa saja klien yang harus saya follow-up hari ini?", agent: "Hari ini Anda memiliki 3 jadwal follow-up prioritas. Detail kontak, nomor telepon, dan riwayat obrolan terakhir sudah saya masukkan ke Google Tasks harian Anda. Silakan cek." },
+        { user: "Apa langkah canvassing dan digital marketing kita hari ini?", agent: "Untuk canvassing, tim akan menyisir area industri Cimahi (rute terlampir). Untuk digital marketing, hari ini kita mempublikasikan konten bertema 'Efisiensi Biaya Listrik Pabrik 30% dengan Solar Panel'. Semua jadwal sudah sinkron!" }
     ];
 
     function runScenario(index) {
         const chatBox = document.getElementById('chat-box');
         const typing = document.getElementById('typing-indicator');
         
-        // Add User Message
         const userMsg = document.createElement('div');
         userMsg.className = 'message msg-user';
         userMsg.textContent = scenarios[index].user;
         chatBox.insertBefore(userMsg, typing);
         
-        // Show Typing
         typing.style.display = 'block';
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        // Simulate Delay and Agent Response
         setTimeout(() => {
             typing.style.display = 'none';
             const agentMsg = document.createElement('div');
@@ -378,6 +414,58 @@
             chatBox.scrollTop = chatBox.scrollHeight;
         }, 1500);
     }
+
+    // KREDENSIAL SUPABASE ANDA
+    const SUPABASE_URL = 'https://jhoqnooaowglnkjvgmnm.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_2G8DfOMIzz2ZDonv68l9wQ_4j8nNlWV';
+
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function fetchPlaces() {
+        const listContainer = document.getElementById('places-list');
+        const loadingIndicator = document.getElementById('places-loading');
+
+        try {
+            const { data, error } = await supabase
+                .from('places')
+                .select('*')
+                .order('id', { ascending: true })
+                .limit(10); // Menampilkan 10 data terbaru
+
+            if (error) throw error;
+
+            loadingIndicator.style.display = 'none';
+            listContainer.innerHTML = '';
+
+            if (!data || data.length === 0) {
+                listContainer.innerHTML = '<li style="text-align:center; color:#a3a3a3;">Belum ada data tersedia.</li>';
+                return;
+            }
+
+            data.forEach(place => {
+                const li = document.createElement('li');
+                li.className = 'data-item';
+                
+                // Menyesuaikan tampilan berdasarkan kolom yang Anda scrape dari n8n (title, street, city, total_score)
+                const address = [place.street, place.city].filter(Boolean).join(', ') || 'Alamat tidak tersedia';
+                const rating = place.total_score ? `★ ${place.total_score} (${place.reviews_count} ulasan)` : 'Belum ada rating';
+                
+                li.innerHTML = `
+                    <div class="data-item-title">${place.title || 'Tanpa Nama'}</div>
+                    <div class="data-item-address">📍 ${address}</div>
+                    <div class="data-item-score">${rating}</div>
+                `;
+                listContainer.appendChild(li);
+            });
+
+        } catch (error) {
+            console.error('Error fetching data dari Supabase:', error.message);
+            loadingIndicator.textContent = 'Gagal memuat data dari database.';
+            loadingIndicator.style.color = '#ef4444';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchPlaces);
 </script>
 
 </body>
